@@ -18,7 +18,7 @@ if (!$basePath){break}
 
 $root = $args[1] ## this is the path to move the images to
 if (!$root){break}
-
+$count=0 ## count how many files moved
 #$basePath = read-host "Type in the path to reorganize: "
 #$basePath= "C:\users\andys\Pictures"
 $files =  Get-ChildItem $basePath -force -recurse | Where-Object { !$_.PSIsContainer }
@@ -29,7 +29,7 @@ foreach ($i in $files)
     
     ## it's possible the EXIF data is empty so we should prepare for that
     ## and use .CreationTime
-    if ($dt -eq "")
+    if (!$dt)
     {
     write-host "$i has no EXIF data"
     continue
@@ -105,7 +105,10 @@ foreach ($i in $files)
     {
         "move-item $destfullname $i" >> "undoMove.log"
         move-item $i $destdir
+		$count++
     }else{
         write-host "can't move $i because `n$destfullname already exists"
     }
 }
+write-host "moved $count files"
+write-host "`n remove-item $basePath -recurse -force`n"
