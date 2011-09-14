@@ -34,7 +34,11 @@ foreach ($i in $files)
     write-host "$i has no EXIF data"
     continue
     }
-    
+    if (!$dt.dt)
+    {
+    write-host "$i has no EXIF data"
+    continue
+    }
     $dt = $dt.dt.toString().split(" ")
     $dt = $dt[0].split("/")
     $year=$dt[2]
@@ -111,4 +115,4 @@ foreach ($i in $files)
     }
 }
 write-host "moved $count files"
-write-host "`n remove-item $basePath -recurse -force`n"
+"remove-item $basePath -recurse -force" >> removethese.txt
